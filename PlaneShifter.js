@@ -52,9 +52,28 @@ class PlaneShifter {
       'KeyT'
     ]
     
+    // for the picker AND the shift. default is from -Infinity to +Infinity
+    this._boundingBox = new THREE.Box3( new THREE.Vector3(-Infinity, -Infinity, -Infinity), new THREE.Vector3(Infinity, Infinity, Infinity));
+    
+    
+    this._states = {IDLE:0, TRANSLATION: 1, ROTATION:2}
+    this._activeState = this._states.IDLE;
+    
+    this._initNormals();
+    
     this._initEvents();
   }
   
+  
+  setBoundingBox( b ){
+    this._boundingBox = b.clone();
+  }
+  
+  _initNormals(){
+    this._planeContainer.children.forEach( function(plane){
+      plane.normalV = new THREE.Vector3(0, 0, 1).applyQuaternion(plane.quaternion).normalize();
+    })
+  }
   
   _initEvents(){
     window.addEventListener( 'mousemove', this._onMouseMove.bind(this), false );
@@ -69,7 +88,7 @@ class PlaneShifter {
     this._mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     this._mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
     
-    this._follow();
+    this._followTranslation();
   }
   
   
@@ -148,15 +167,30 @@ class PlaneShifter {
     this._raycaster.setFromCamera( this._mouse, this._camera );
     var intersects = this._raycaster.intersectObject( this._planeContainer, true );
     
-    if( intersects && intersects.length ){
-
-      var intersectPlane = intersects[0].object;
+    for(var i=0; i<intersects.length; i++){
+      if( this._boundingBox.containsPoint( intersects[i].point) ){
+        
+        // TODO:  is it for rotation or translation?
+        this._castedRayForTranslation( intersects[i] );
+        break;
+      }
+    }
+    
+  }
+  
+  
+  /**
+  * r is an intersect
+  */
+  _castedRayForTranslation( intersect ){
+    
+      var intersectPlane = intersect.object;
       this._shiftConfig.originalObjectPosition = this._planeContainer.position.clone();
       this._shiftConfig.follow = true;
-      this._shiftConfig.hitPoint3D = intersects[0].point.clone();
+      this._shiftConfig.hitPoint3D = intersect.point.clone();
       this._shiftConfig.hitPoint2D = this._mouse.clone();  //this._getScreenCoord( this._shiftConfig.hitPoint3D );
       this._shiftConfig.planeNormalInternal3D = intersectPlane.normalV.clone();
-      this._shiftConfig.planeNormalWorld3D = intersectPlane.normalV.clone().applyQuaternion(container.quaternion).normalize();
+      this._shiftConfig.planeNormalWorld3D = intersectPlane.normalV.clone().applyQuaternion(this._planeContainer.quaternion).normalize();
       this._shiftConfig.topPoint3D = this._shiftConfig.hitPoint3D.clone().add( this._shiftConfig.planeNormalWorld3D );
       this._shiftConfig.topPoint2D = this._getScreenCoord( this._shiftConfig.topPoint3D );
       
@@ -165,21 +199,14 @@ class PlaneShifter {
         this._shiftConfig.topPoint2D.x - this._shiftConfig.hitPoint2D.x,
         this._shiftConfig.topPoint2D.y - this._shiftConfig.hitPoint2D.y )
       
-      this._shiftConfig.hitPoint3DInternal = this._planeContainer.worldToLocal( intersects[0].point.clone() );
-    
-      sphere.position.copy( this._shiftConfig.topPoint3D )
-      
-    }
-    
+      this._shiftConfig.hitPoint3DInternal = this._planeContainer.worldToLocal( intersect.point.clone() );
   }
   
 
-  _follow(){
+  _followTranslation(){
     if( ! this._shiftConfig.follow )
       return;
-    
-    //this._updateConfig();
-    
+
     // the 2D shift performed by the mouse since the last hit  
     var mouseShift = new THREE.Vector2(
       this._mouse.x - this._shiftConfig.hitPoint2D.x,
@@ -188,26 +215,31 @@ class PlaneShifter {
     
     // we are weighting the shift by the the camera distance ratio compared to the initial camera distance
     var newContainerToCamDistance = this._camera.position.clone().sub( this._planeContainer.position ).length();
-    //var distanceRatio = newContainerToCamDistance / this._originalDistanceToCam ;
-
 
     var normal2DLengthOnScreen = this._shiftConfig.planeNormal2D.length();
-    
     var normalFactor = mouseShift.dot( this._shiftConfig.planeNormal2D.clone().normalize() ) / normal2DLengthOnScreen;/** distanceRatio;*/
     var shift3D = this._shiftConfig.planeNormalWorld3D.clone().multiplyScalar( normalFactor );
     
-    this._planeContainer.position.set(
+    var newPosition = new THREE.Vector3(
       this._shiftConfig.originalObjectPosition.x + shift3D.x,
       this._shiftConfig.originalObjectPosition.y + shift3D.y,
       this._shiftConfig.originalObjectPosition.z + shift3D.z
     )
     
+    if(this._boundingBox.containsPoint( newPosition ) ){
+      this._planeContainer.position.set(
+        this._shiftConfig.originalObjectPosition.x + shift3D.x,
+        this._shiftConfig.originalObjectPosition.y + shift3D.y,
+        this._shiftConfig.originalObjectPosition.z + shift3D.z
+      )
+    }
+    
     if( this._cameraFollowObject ){
       this._camera.lookAt( this._planeContainer.position )
     }
     
-
   }
+  
   
   _disableControl(){
     if(!this._control)

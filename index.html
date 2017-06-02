@@ -10,7 +10,7 @@
   <meta  property=og:description content="This is the description" />
   <meta  property=og:image content="http://me.jonathanlurie.fr/images/bg.jpg" />
 
-  <title>Three sample</title>
+  <title>PlaneShifter Demo</title>
 
   <!-- <link rel="stylesheet" href="style.css" type="text/css" /> -->
   
@@ -68,7 +68,6 @@
 
   <script src="https://threejs.org/build/three.min.js"></script>
   <script src='https://threejs.org/examples/js/libs/dat.gui.min.js'></script>
-  <script src='https://threejs.org/examples/js/libs/stats.min.js'></script>
   <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
   
   <script src="PlaneShifter.js"></script>
@@ -82,7 +81,7 @@
     This is a Three JS sample, <a href="https://github.com/jonathanlurie/starters" target="_blank">fork it on Github!</a>
   </div>
 
-  <a href="https://github.com/jonathanlurie/starter" target="_blank">
+  <a href="https://github.com/jonathanlurie/PlaneDrag" target="_blank">
     <img class="logoCorner" src="http://me.jonathanlurie.fr/starter/images/githublogo.png"/>
   </a>
 
@@ -103,10 +102,6 @@
 
 
   function initGui(){
-
-    stats = new Stats();
-    document.body.appendChild(stats.dom);
-
     gui = new dat.GUI();
 
     // a button to change the color
@@ -166,8 +161,6 @@
         container.rotation.z = val;
       })
 
-
-
   }
 
 
@@ -204,6 +197,10 @@
 
     planeShifter = new PlaneShifter( container , camera, controls );
     //planeShifter.setCameraFollowObject( true );
+    planeShifter.setBoundingBox( new THREE.Box3( 
+      new THREE.Vector3(-10, -10, -10),  // min
+      new THREE.Vector3(10, 10, 10)      // max
+    ))
 
     initGui();
   }
@@ -212,29 +209,31 @@
   function initPlanes(){
     container = new THREE.Object3D();
     
-    var geometry = new THREE.PlaneBufferGeometry( 10, 10, 10 );
+    var geometry = new THREE.PlaneGeometry( 10, 10, 1 );
     var material = new THREE.MeshBasicMaterial( {side: THREE.DoubleSide} );
     
     var planeX = new THREE.Mesh( geometry, material.clone() );
     planeX.rotateY( Math.PI / 2 );
     planeX.material.color.set( 0xff8888 );
     planeX.name = "planeX";
-    planeX.normalV = new THREE.Vector3(1, 0, 0);
+    //planeX.normalV = new THREE.Vector3(1, 0, 0);
     
     var planeY = new THREE.Mesh( geometry, material.clone() );
     planeY.rotateX( Math.PI / 2);
     planeY.material.color.set( 0xccffcc );
     planeY.name = "planeY";
-    planeY.normalV = new THREE.Vector3(0, 1, 0);
+    //planeY.normalV = new THREE.Vector3(0, 1, 0);
     
     var planeZ = new THREE.Mesh( geometry, material.clone() );
     planeZ.material.color.set( 0x8888ff );
     planeZ.name = "planeZ";
-    planeZ.normalV = new THREE.Vector3(0, 0, 1);
+    //planeZ.normalV = new THREE.Vector3(0, 0, 1);
     
     container.add( planeX );
     container.add( planeY );
     container.add( planeZ );
+
+    console.log( container );
 
     //container.scale.set(100, 100, 100);
     /*
@@ -247,8 +246,6 @@
 
   function render() {
     requestAnimationFrame( render );
-    stats.update();
-    //castRay();
     renderer.render( scene, camera );
   };
 
