@@ -65,26 +65,8 @@
     text-align: center;
     padding: 15px;
     font-family: inherit;
+    pointer-events: none;
   }
-
-
-  .logoCorner{
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 60px;
-    margin: 10px;
-
-    border-color: rgba(0, 0, 0, 0);
-    border-style: dashed;
-    border-radius: 50%;
-    transition: all 0.2s;
-  }
-
-  .logoCorner:hover{
-    border-color: #03a9f4;
-  }
-
 
   </style>
 
@@ -100,15 +82,13 @@
 <body>
 
   <div id="info">
-    PlaneShifter ★ <a href="https://github.com/jonathanlurie/starters" target="_blank">fork it on Github!</a>
+    PlaneShifter ★ <a href="https://github.com/jonathanlurie/PlaneDrag" target="_blank">fork it on Github!</a>
   </div>
 
-  <a href="https://github.com/jonathanlurie/PlaneDrag" target="_blank">
-    <img class="logoCorner" src="http://me.jonathanlurie.fr/starter/images/githublogo.png"/>
-  </a>
   
   <div id="footer">
-    Press key <key>T</key> while grabbing a plane to translate it.
+    <p>Press key <key>T</key> while grabbing a plane to translate it along its normal vector</p>
+    <p>Press key <key>R</key> while grabbing a plane to spin it around its center</p>
   </div>
 
 

@@ -1,4 +1,9 @@
-
+/*
+* Author   Jonathan Lurie - http://me.jonahanlurie.fr
+* License  MIT
+* Link      https://github.com/jonathanlurie/PlaneDrag
+* Lab       MCIN - Montreal Neurological Institute
+*/
 
 class PlaneShifter {
   
@@ -40,15 +45,10 @@ class PlaneShifter {
     this._boundingBox = new THREE.Box3( new THREE.Vector3(-Infinity, -Infinity, -Infinity), new THREE.Vector3(Infinity, Infinity, Infinity));
     
     // values involved in the rotation
-    this._shiftConfig = {
-      originalObjectPosition: null,
-      hitPoint3D: null,
-      hitPoint2D: null,
-      topPoint3D: null,
-      topPoint2D: null,
-      planeNormalWorld3D: null,
-      planeNormal2D: null
-    }
+    this._rotateConfig = {}
+    
+    // values involved in the rotation
+    this._shiftConfig = {}
     
     // list of possible states
     this._states = {IDLE:0, TRANSLATION: 1, ROTATION:2}
@@ -231,7 +231,7 @@ class PlaneShifter {
             break;
             
           case this._states.ROTATION :
-            console.log("soon, rotation");
+            this._castedRayForRotation( intersects[i] );
             break
             
           default:
@@ -286,7 +286,7 @@ class PlaneShifter {
         break;
         
       case this._states.ROTATION :
-        console.log("soon, rotation (follow)");
+        this._followRotation();
         break
         
       default:
@@ -401,6 +401,74 @@ class PlaneShifter {
     
     this._control.zoom0 = this._orbitData.zoom;
     this._control.reset();
+  }
+  
+  
+  /**
+  * [PRIVATE]
+  * Deals with an intersection in the context of a rotation
+  * @param {Object} intersect - result from a THREE.Raycaster.intersectObject
+  * (not the array, but rather the single object)
+  */
+  _castedRayForRotation( intersect ){
+    this._interacting = true;
+    var intersectPlane = intersect.object;
+    this._rotateConfig.originalObjectRotation = this._planeContainer.rotation.clone();
+
+    this._rotateConfig.hitPoint2D = this._mouse.clone(); 
+    this._rotateConfig.planeNormalInternal3D = intersectPlane.normalV.clone();
+    this._rotateConfig.planeNormalWorld3D = intersectPlane.normalV.clone().applyQuaternion(this._planeContainer.quaternion).normalize();
+    this._rotateConfig.center3D = this._planeContainer.getWorldPosition();
+    this._rotateConfig.center2D = this._getScreenCoord( this._rotateConfig.center3D );
+    
+    this._rotateConfig.cameraObjectVector = new THREE.Vector3( 
+      this._camera.position.x - this._rotateConfig.center3D.x,
+      this._camera.position.y - this._rotateConfig.center3D.y,
+      this._camera.position.z - this._rotateConfig.center3D.z
+    ).normalize();
+    
+    // if the plane if facing front or back the camera, we have to apply a diferent sign to the rotation
+    this._rotateConfig.cameraSign = Math.sign( this._rotateConfig.planeNormalWorld3D.dot( this._rotateConfig.cameraObjectVector ) );
+    
+  }
+  
+
+  /**
+  * [PRIVATE]
+  * When a translation has started, this method keep updating the position of the
+  * shifting plane.
+  */
+  _followRotation(){
+    var center = this._rotateConfig.center2D;
+    var start = this._rotateConfig.hitPoint2D;
+    var current = this._mouse.clone();
+    
+    var centerToStart = new THREE.Vector3(
+      start.x - center.x,
+      start.y - center.y,
+      start.z - center.z
+    ).normalize();
+    
+    var centerToCurrent = new THREE.Vector3(
+      current.x - center.x,
+      current.y - center.y,
+      current.z - center.z
+    ).normalize();
+    
+    // the rotation angle (unsigned)
+    var angleRad = Math.acos( centerToStart.dot(centerToCurrent) );
+    
+    // the rotation direction depends on the normal of the angle
+    var angleDirection = Math.sign( centerToStart.cross(centerToCurrent).z );
+
+    // reseting from the original position (we dont play with little deltas here!)
+    this._planeContainer.rotation.set(
+      this._rotateConfig.originalObjectRotation.x,
+      this._rotateConfig.originalObjectRotation.y,
+      this._rotateConfig.originalObjectRotation.z
+    )
+
+    this._planeContainer.rotateOnAxis(this._rotateConfig.planeNormalInternal3D,  angleRad * angleDirection * this._rotateConfig.cameraSign )
   }
   
   
