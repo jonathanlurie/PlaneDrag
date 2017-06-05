@@ -4,14 +4,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name=keywords  content="coma, separated, keywords" />
-  <meta name=description  content="This is the description" />
-  <meta  property=og:title content="Page Title" />
-  <meta  property=og:description content="This is the description" />
-  <meta  property=og:image content="http://me.jonathanlurie.fr/images/bg.jpg" />
+  <meta name=keywords  content="plane, rotation, translation, three, threejs" />
+  <meta name=description  content="Helper to rotate and translate a plane sytem along/around its normal vectors" />
+  <meta  property=og:title content="PlaneShifter Demo" />
+  <meta  property=og:description content="Helper to rotate and translate a plane sytem along/around its normal vectors" />
 
   <title>PlaneShifter Demo</title>
 
+  
   <style>
 
 
@@ -44,7 +44,7 @@
     border-color: #a0a0a0;
     border-bottom-width: 3px;
   }
-
+  
   #info {
     text-align: center;
     position: absolute;
@@ -69,12 +69,11 @@
   </style>
 
   <script src="https://threejs.org/build/three.min.js"></script>
-  <script src='https://threejs.org/examples/js/libs/stats.min.js'></script>
   <script src='https://threejs.org/examples/js/libs/dat.gui.min.js'></script>
   <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
-
-  <script src="PlaneShifter.js"></script>
-
+  
+  <script src="../dist/PlaneShifter.js"></script>
+  
 
 </head>
 <body>
@@ -83,7 +82,7 @@
     PlaneShifter ★ <a href="https://github.com/jonathanlurie/PlaneDrag" target="_blank">fork it on Github!</a>
   </div>
 
-
+  
   <div id="footer">
     <p>Press key <key>T</key> while grabbing a plane to translate it along its normal vector</p>
     <p>Press key <key>R</key> while grabbing a plane to spin it around its center</p>
@@ -106,14 +105,12 @@
 
 
   function initGui(){
-    stats = new Stats();
-    document.body.appendChild(stats.dom);
-
     gui = new dat.GUI();
 
+    // a button to change the color
     guiParam.reset = function(){
-      container.rotation.set(0, 0, 0);
       container.position.set(0, 0, 0);
+      container.rotation.set(0, 0, 0);
      }
      gui.add(guiParam, 'reset');
 
@@ -125,12 +122,11 @@
     renderer = new THREE.WebGLRenderer( { antialias: false } );
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.01, 500 );
-
+    
     var axisHelper = new THREE.AxisHelper( 1 );
     scene.add( axisHelper );
     controls = new THREE.OrbitControls( camera, renderer.domElement );
-
-
+        
     initPlanes();
 
     var geometry = new THREE.SphereGeometry( 0.02, 32, 32 );
@@ -149,9 +145,11 @@
     renderer.setClearColor( 0xEEEEEE, 1 );
     document.body.appendChild( renderer.domElement );
 
-    planeShifter = new PlaneShifter( container , camera, controls );
+    //var orbit = new THREE.OrbitControls( camera, renderer.domElement );
+
+    planeShifter = new PlaneShifter.PlaneShifter( container , camera, controls );
     //planeShifter.setCameraFollowObject( true );
-    planeShifter.setBoundingBox( new THREE.Box3(
+    planeShifter.setBoundingBox( new THREE.Box3( 
       new THREE.Vector3(-10, -10, -10),  // min
       new THREE.Vector3(10, 10, 10)      // max
     ))
@@ -162,36 +160,43 @@
 
   function initPlanes(){
     container = new THREE.Object3D();
-
+    
     var geometry = new THREE.PlaneGeometry( 10, 10, 1 );
     var material = new THREE.MeshBasicMaterial( {side: THREE.DoubleSide} );
-
+    
     var planeX = new THREE.Mesh( geometry, material.clone() );
     planeX.rotateY( Math.PI / 2 );
     planeX.material.color.set( 0xff8888 );
     planeX.name = "planeX";
     //planeX.normalV = new THREE.Vector3(1, 0, 0);
-
+    
     var planeY = new THREE.Mesh( geometry, material.clone() );
     planeY.rotateX( Math.PI / 2);
     planeY.material.color.set( 0xccffcc );
     planeY.name = "planeY";
     //planeY.normalV = new THREE.Vector3(0, 1, 0);
-
+    
     var planeZ = new THREE.Mesh( geometry, material.clone() );
     planeZ.material.color.set( 0x8888ff );
     planeZ.name = "planeZ";
     //planeZ.normalV = new THREE.Vector3(0, 0, 1);
-
+    
     container.add( planeX );
     container.add( planeY );
     container.add( planeZ );
 
+    console.log( container );
+
+    //container.scale.set(100, 100, 100);
+    /*
+    var axisHelper = new THREE.AxisHelper( 0.1 );
+    axisHelper.position.set(0.1, -0.01, 0.1)
+    container.add( axisHelper );
+    */
     scene.add( container );
   }
 
   function render() {
-    stats.update();
     requestAnimationFrame( render );
     renderer.render( scene, camera );
   };

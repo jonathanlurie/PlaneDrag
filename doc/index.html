@@ -1,0 +1,833 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8' />
+  <title>  | Documentation</title>
+  <meta name='viewport' content='width=device-width,initial-scale=1'>
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Source+Code+Pro:400,500,700' rel='stylesheet' type='text/css'>
+  <link href='assets/bass.css' type='text/css' rel='stylesheet' />
+  <link href='assets/style.css' type='text/css' rel='stylesheet' />
+  <link href='assets/github.css' type='text/css' rel='stylesheet' />
+</head>
+<body class='documentation'>
+  <div class='container'>
+    <div class='clearfix md-mxn2'>
+      <div class='fixed md-show fix-3 overflow-auto max-height-100'>
+        <div class='py1 px2'>
+          <h3 class='mb0 no-anchor'></h3>
+          <div class='mb1'><code></code></div>
+          <input
+            placeholder='Filter'
+            id='filter-input'
+            class='col12 block field'
+            type='text' />
+          <div id='toc'>
+              <a
+                href='#PlaneShifter'
+                class='block bold'>
+                PlaneShifter
+              </a>
+                <a
+                  href='#PlaneShifter._castedRayForRotation'
+                  class='regular block'>
+                  #_castedRayForRotation
+                </a>
+                <a
+                  href='#PlaneShifter._castedRayForTranslation'
+                  class='regular block'>
+                  #_castedRayForTranslation
+                </a>
+                <a
+                  href='#PlaneShifter._disableControl'
+                  class='regular block'>
+                  #_disableControl
+                </a>
+                <a
+                  href='#PlaneShifter._enableControl'
+                  class='regular block'>
+                  #_enableControl
+                </a>
+                <a
+                  href='#PlaneShifter._evaluateCurentState'
+                  class='regular block'>
+                  #_evaluateCurentState
+                </a>
+                <a
+                  href='#PlaneShifter._followInteraction'
+                  class='regular block'>
+                  #_followInteraction
+                </a>
+                <a
+                  href='#PlaneShifter._followRotation'
+                  class='regular block'>
+                  #_followRotation
+                </a>
+                <a
+                  href='#PlaneShifter._followTranslation'
+                  class='regular block'>
+                  #_followTranslation
+                </a>
+                <a
+                  href='#PlaneShifter._getScreenCoord'
+                  class='regular block'>
+                  #_getScreenCoord
+                </a>
+                <a
+                  href='#PlaneShifter._initEvents'
+                  class='regular block'>
+                  #_initEvents
+                </a>
+                <a
+                  href='#PlaneShifter._initNormals'
+                  class='regular block'>
+                  #_initNormals
+                </a>
+                <a
+                  href='#PlaneShifter._isKeyPressed'
+                  class='regular block'>
+                  #_isKeyPressed
+                </a>
+                <a
+                  href='#PlaneShifter._onKeyDown'
+                  class='regular block'>
+                  #_onKeyDown
+                </a>
+                <a
+                  href='#PlaneShifter._onKeyUp'
+                  class='regular block'>
+                  #_onKeyUp
+                </a>
+                <a
+                  href='#PlaneShifter._onMouseDown'
+                  class='regular block'>
+                  #_onMouseDown
+                </a>
+                <a
+                  href='#PlaneShifter._onMouseMove'
+                  class='regular block'>
+                  #_onMouseMove
+                </a>
+                <a
+                  href='#PlaneShifter._onMouseUp'
+                  class='regular block'>
+                  #_onMouseUp
+                </a>
+                <a
+                  href='#PlaneShifter._raycast'
+                  class='regular block'>
+                  #_raycast
+                </a>
+                <a
+                  href='#PlaneShifter._restoreOrbitData'
+                  class='regular block'>
+                  #_restoreOrbitData
+                </a>
+                <a
+                  href='#PlaneShifter._saveOrbitData'
+                  class='regular block'>
+                  #_saveOrbitData
+                </a>
+                <a
+                  href='#PlaneShifter.constructor'
+                  class='regular block'>
+                  #constructor
+                </a>
+                <a
+                  href='#PlaneShifter.setBoundingBox'
+                  class='regular block'>
+                  #setBoundingBox
+                </a>
+                <a
+                  href='#PlaneShifter.setCameraFollowObject'
+                  class='regular block'>
+                  #setCameraFollowObject
+                </a>
+          </div>
+        </div>
+      </div>
+      <div class='fix-margin-3'>
+        <div class='px2'>
+<div class='py1'><section class='py2 clearfix'>
+  <h2 id='PlaneShifter' class='mt0'>
+    PlaneShifter<span class='gray'>(planeContainer, camera, control)</span>
+  </h2>
+  <p>PlaneShifter is an helper for THREE.Object3D that contains 3 orthogonal planes.
+The purpose is to make an easy translation of the whole container along each plane&apos;s normal vector,
+and the same for rotation.
+The module THREE must be defined in advanced.</p>
+
+    <h4>Parameters</h4>
+    <ul class='suppress-p-margin'>
+        <li> <strong>planeContainer</strong>
+          :
+          <div class='force-inline'>
+            
+          </div>
+        </li>
+        <li> <strong>camera</strong>
+          :
+          <div class='force-inline'>
+            
+          </div>
+        </li>
+        <li> <strong>control</strong>
+            (default <code>null</code>)
+          :
+          <div class='force-inline'>
+            
+          </div>
+        </li>
+    </ul>
+      <h4>Instance members</h4>
+        <div class='collapsible' id='PlaneShifter._castedRayForRotation'>
+          <a href='#PlaneShifter._castedRayForRotation'>
+            <code>
+              #_castedRayForRotation<span class='gray'>(intersect)</span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE]
+Deals with an intersection in the context of a rotation</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._castedRayForRotation' class='mt0'>
+                _castedRayForRotation<span class='gray'>(intersect)</span>
+              </h2>
+              <p>[PRIVATE]
+            Deals with an intersection in the context of a rotation</p>
+            
+                <h4>Parameters</h4>
+                <ul class='suppress-p-margin'>
+                    <li><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code> <strong>intersect</strong>
+                      :
+                      <div class='force-inline'>
+                        <p>result from a THREE.Raycaster.intersectObject
+            (not the array, but rather the single object)</p>
+            
+                      </div>
+                    </li>
+                </ul>
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter._castedRayForTranslation'>
+          <a href='#PlaneShifter._castedRayForTranslation'>
+            <code>
+              #_castedRayForTranslation<span class='gray'>(intersect)</span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE]
+Deals with an intersection in the context of a translation</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._castedRayForTranslation' class='mt0'>
+                _castedRayForTranslation<span class='gray'>(intersect)</span>
+              </h2>
+              <p>[PRIVATE]
+            Deals with an intersection in the context of a translation</p>
+            
+                <h4>Parameters</h4>
+                <ul class='suppress-p-margin'>
+                    <li><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code> <strong>intersect</strong>
+                      :
+                      <div class='force-inline'>
+                        <p>result from a THREE.Raycaster.intersectObject
+            (not the array, but rather the single object)</p>
+            
+                      </div>
+                    </li>
+                </ul>
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter._disableControl'>
+          <a href='#PlaneShifter._disableControl'>
+            <code>
+              #_disableControl<span class='gray'></span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE]
+Disable the orbit/trackball control</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._disableControl' class='mt0'>
+                _disableControl<span class='gray'></span>
+              </h2>
+              <p>[PRIVATE]
+            Disable the orbit/trackball control</p>
+            
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter._enableControl'>
+          <a href='#PlaneShifter._enableControl'>
+            <code>
+              #_enableControl<span class='gray'></span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE]
+enable the orbit/trackball control</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._enableControl' class='mt0'>
+                _enableControl<span class='gray'></span>
+              </h2>
+              <p>[PRIVATE]
+            enable the orbit/trackball control</p>
+            
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter._evaluateCurentState'>
+          <a href='#PlaneShifter._evaluateCurentState'>
+            <code>
+              #_evaluateCurentState<span class='gray'></span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE]
+Evaluate the current state and enable or disable the control upon this state</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._evaluateCurentState' class='mt0'>
+                _evaluateCurentState<span class='gray'></span>
+              </h2>
+              <p>[PRIVATE]
+            Evaluate the current state and enable or disable the control upon this state</p>
+            
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter._followInteraction'>
+          <a href='#PlaneShifter._followInteraction'>
+            <code>
+              #_followInteraction<span class='gray'></span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE]
+Continue the interaction (but mostly decide which kind and delegate the work)</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._followInteraction' class='mt0'>
+                _followInteraction<span class='gray'></span>
+              </h2>
+              <p>[PRIVATE]
+            Continue the interaction (but mostly decide which kind and delegate the work)</p>
+            
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter._followRotation'>
+          <a href='#PlaneShifter._followRotation'>
+            <code>
+              #_followRotation<span class='gray'></span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE]
+When a translation has started, this method keep updating the position of the
+shifting plane.</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._followRotation' class='mt0'>
+                _followRotation<span class='gray'></span>
+              </h2>
+              <p>[PRIVATE]
+            When a translation has started, this method keep updating the position of the
+            shifting plane.</p>
+            
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter._followTranslation'>
+          <a href='#PlaneShifter._followTranslation'>
+            <code>
+              #_followTranslation<span class='gray'></span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE]
+When a translation has started, this method keep updating the position of the
+shifting plane.</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._followTranslation' class='mt0'>
+                _followTranslation<span class='gray'></span>
+              </h2>
+              <p>[PRIVATE]
+            When a translation has started, this method keep updating the position of the
+            shifting plane.</p>
+            
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter._getScreenCoord'>
+          <a href='#PlaneShifter._getScreenCoord'>
+            <code>
+              #_getScreenCoord<span class='gray'>(coord3D)</span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE]
+Get screen coordinates of a 3D position</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._getScreenCoord' class='mt0'>
+                _getScreenCoord<span class='gray'>(coord3D)</span>
+              </h2>
+              <p>[PRIVATE]
+            Get screen coordinates of a 3D position</p>
+            
+                <h4>Parameters</h4>
+                <ul class='suppress-p-margin'>
+                    <li><code>THREE.Vector3</code> <strong>coord3D</strong>
+                      :
+                      <div class='force-inline'>
+                        <p>3D position.
+            Note: the project method is not reliable when the point is out of screen</p>
+            
+                      </div>
+                    </li>
+                </ul>
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter._initEvents'>
+          <a href='#PlaneShifter._initEvents'>
+            <code>
+              #_initEvents<span class='gray'></span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE]
+Initialize all the mouse/keyboard events</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._initEvents' class='mt0'>
+                _initEvents<span class='gray'></span>
+              </h2>
+              <p>[PRIVATE]
+            Initialize all the mouse/keyboard events</p>
+            
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter._initNormals'>
+          <a href='#PlaneShifter._initNormals'>
+            <code>
+              #_initNormals<span class='gray'></span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE]
+initialize a normal vector for each plane</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._initNormals' class='mt0'>
+                _initNormals<span class='gray'></span>
+              </h2>
+              <p>[PRIVATE]
+            initialize a normal vector for each plane</p>
+            
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter._isKeyPressed'>
+          <a href='#PlaneShifter._isKeyPressed'>
+            <code>
+              #_isKeyPressed<span class='gray'>(keycode)</span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE]
+tell if a key from the keyboard is pressed</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._isKeyPressed' class='mt0'>
+                _isKeyPressed<span class='gray'>(keycode)</span>
+              </h2>
+              <p>[PRIVATE]
+            tell if a key from the keyboard is pressed</p>
+            
+                <h4>Parameters</h4>
+                <ul class='suppress-p-margin'>
+                    <li><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code> <strong>keycode</strong>
+                      :
+                      <div class='force-inline'>
+                        <p>the keycode of the keypressed</p>
+            
+                      </div>
+                    </li>
+                </ul>
+                  <h4>Returns</h4>
+                  <code><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></code></code>
+                  :
+                  <div class='force-inline'>
+                    <p>true if yes, false if not</p>
+            
+                  </div>
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter._onKeyDown'>
+          <a href='#PlaneShifter._onKeyDown'>
+            <code>
+              #_onKeyDown<span class='gray'>(evt)</span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE - EVENT]
+when a key from the keyboard is released. Refreshes the current state</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._onKeyDown' class='mt0'>
+                _onKeyDown<span class='gray'>(evt)</span>
+              </h2>
+              <p>[PRIVATE - EVENT]
+            when a key from the keyboard is released. Refreshes the current state</p>
+            
+                <h4>Parameters</h4>
+                <ul class='suppress-p-margin'>
+                    <li> <strong>evt</strong>
+                      :
+                      <div class='force-inline'>
+                        
+                      </div>
+                    </li>
+                </ul>
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter._onKeyUp'>
+          <a href='#PlaneShifter._onKeyUp'>
+            <code>
+              #_onKeyUp<span class='gray'>(evt)</span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE - EVENT]
+when a key from the keyboard is pressed. Refreshes the current state</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._onKeyUp' class='mt0'>
+                _onKeyUp<span class='gray'>(evt)</span>
+              </h2>
+              <p>[PRIVATE - EVENT]
+            when a key from the keyboard is pressed. Refreshes the current state</p>
+            
+                <h4>Parameters</h4>
+                <ul class='suppress-p-margin'>
+                    <li> <strong>evt</strong>
+                      :
+                      <div class='force-inline'>
+                        
+                      </div>
+                    </li>
+                </ul>
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter._onMouseDown'>
+          <a href='#PlaneShifter._onMouseDown'>
+            <code>
+              #_onMouseDown<span class='gray'>(evt)</span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE - EVENT]
+when mouse is clicked, cast a ray if the right keyboard key is maintained pushed</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._onMouseDown' class='mt0'>
+                _onMouseDown<span class='gray'>(evt)</span>
+              </h2>
+              <p>[PRIVATE - EVENT]
+            when mouse is clicked, cast a ray if the right keyboard key is maintained pushed</p>
+            
+                <h4>Parameters</h4>
+                <ul class='suppress-p-margin'>
+                    <li> <strong>evt</strong>
+                      :
+                      <div class='force-inline'>
+                        
+                      </div>
+                    </li>
+                </ul>
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter._onMouseMove'>
+          <a href='#PlaneShifter._onMouseMove'>
+            <code>
+              #_onMouseMove<span class='gray'>(evt)</span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE - EVENT]
+when mouse is moving, refreshes the internal normalized mouse position</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._onMouseMove' class='mt0'>
+                _onMouseMove<span class='gray'>(evt)</span>
+              </h2>
+              <p>[PRIVATE - EVENT]
+            when mouse is moving, refreshes the internal normalized mouse position</p>
+            
+                <h4>Parameters</h4>
+                <ul class='suppress-p-margin'>
+                    <li> <strong>evt</strong>
+                      :
+                      <div class='force-inline'>
+                        
+                      </div>
+                    </li>
+                </ul>
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter._onMouseUp'>
+          <a href='#PlaneShifter._onMouseUp'>
+            <code>
+              #_onMouseUp<span class='gray'>(evt)</span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE - EVENT]
+when mouse is releasing</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._onMouseUp' class='mt0'>
+                _onMouseUp<span class='gray'>(evt)</span>
+              </h2>
+              <p>[PRIVATE - EVENT]
+            when mouse is releasing</p>
+            
+                <h4>Parameters</h4>
+                <ul class='suppress-p-margin'>
+                    <li> <strong>evt</strong>
+                      :
+                      <div class='force-inline'>
+                        
+                      </div>
+                    </li>
+                </ul>
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter._raycast'>
+          <a href='#PlaneShifter._raycast'>
+            <code>
+              #_raycast<span class='gray'></span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE]
+Performs a raycasting on the children of the plane container, then based on the
+active state, take a decision of what to do.</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._raycast' class='mt0'>
+                _raycast<span class='gray'></span>
+              </h2>
+              <p>[PRIVATE]
+            Performs a raycasting on the children of the plane container, then based on the
+            active state, take a decision of what to do.</p>
+            
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter._restoreOrbitData'>
+          <a href='#PlaneShifter._restoreOrbitData'>
+            <code>
+              #_restoreOrbitData<span class='gray'></span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE]
+Helper method to call before re-enabling the controls</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._restoreOrbitData' class='mt0'>
+                _restoreOrbitData<span class='gray'></span>
+              </h2>
+              <p>[PRIVATE]
+            Helper method to call before re-enabling the controls</p>
+            
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter._saveOrbitData'>
+          <a href='#PlaneShifter._saveOrbitData'>
+            <code>
+              #_saveOrbitData<span class='gray'></span>
+            </code>
+            <div class='force-inline'>
+              <p>[PRIVATE]
+Helper method to call before disabling the controls</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter._saveOrbitData' class='mt0'>
+                _saveOrbitData<span class='gray'></span>
+              </h2>
+              <p>[PRIVATE]
+            Helper method to call before disabling the controls</p>
+            
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter.constructor'>
+          <a href='#PlaneShifter.constructor'>
+            <code>
+              #constructor<span class='gray'>(planeContainer, camera, control)</span>
+            </code>
+            <div class='force-inline'>
+              
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter.constructor' class='mt0'>
+                constructor<span class='gray'>(planeContainer, camera, control)</span>
+              </h2>
+              
+                <h4>Parameters</h4>
+                <ul class='suppress-p-margin'>
+                    <li><code>THREE.Object3D</code> <strong>planeContainer</strong>
+                      :
+                      <div class='force-inline'>
+                        <p>an object that contains 3 orthogonal planes</p>
+            
+                      </div>
+                    </li>
+                    <li> <strong>camera</strong>
+                      :
+                      <div class='force-inline'>
+                        
+                      </div>
+                    </li>
+                    <li> <strong>control</strong>
+                        (default <code>null</code>)
+                      :
+                      <div class='force-inline'>
+                        
+                      </div>
+                    </li>
+                </ul>
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter.setBoundingBox'>
+          <a href='#PlaneShifter.setBoundingBox'>
+            <code>
+              #setBoundingBox<span class='gray'>(b)</span>
+            </code>
+            <div class='force-inline'>
+              <p>Define a boundingbox to restrict the raycasting and the shift</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter.setBoundingBox' class='mt0'>
+                setBoundingBox<span class='gray'>(b)</span>
+              </h2>
+              <p>Define a boundingbox to restrict the raycasting and the shift</p>
+            
+                <h4>Parameters</h4>
+                <ul class='suppress-p-margin'>
+                    <li><code>THREE.Box3</code> <strong>b</strong>
+                      :
+                      <div class='force-inline'>
+                        <p>bounding box</p>
+            
+                      </div>
+                    </li>
+                </ul>
+            </section>
+          </div>
+        </div>
+        <div class='collapsible' id='PlaneShifter.setCameraFollowObject'>
+          <a href='#PlaneShifter.setCameraFollowObject'>
+            <code>
+              #setCameraFollowObject<span class='gray'>(b)</span>
+            </code>
+            <div class='force-inline'>
+              <p>Whether or not the camera should follow the object</p>
+
+            </div>
+          </a>
+          <div class='collapser border px2'>
+            <section class='py2 clearfix'>
+              <h2 id='PlaneShifter.setCameraFollowObject' class='mt0'>
+                setCameraFollowObject<span class='gray'>(b)</span>
+              </h2>
+              <p>Whether or not the camera should follow the object</p>
+            
+                <h4>Parameters</h4>
+                <ul class='suppress-p-margin'>
+                    <li><code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></code> <strong>b</strong>
+                      :
+                      <div class='force-inline'>
+                        <p>true to follow, false to not follow</p>
+            
+                      </div>
+                    </li>
+                </ul>
+            </section>
+          </div>
+        </div>
+</section>
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src='assets/anchor.js'></script>
+  <script src='assets/site.js'></script>
+</body>
+</html>

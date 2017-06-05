@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name=keywords  content="plane, rotation, translation, three, threejs" />
+    <meta name=description  content="Helper to rotate and translate a plane sytem along/around its normal vectors" />
+    <meta  property=og:title content="PlaneShifter Demo" />
+    <meta  property=og:description content="Helper to rotate and translate a plane sytem along/around its normal vectors" />
+
+    <title>Bad Example</title>
+
+    <style>
+
+      body {
+        margin:0;
+        font-family: "Lucida Console", monospace;
+        font-size: 15px;
+      }
+
+    </style>
+
+    <script src="../dist/PlaneShifter.js"></script>
+  </head>
+  <body>
+    <p>
+      This bad example shows what happens when we try to instanciate PlaneShifter while THREE (from THREE js) module is not visible.
+    </p>
+    <div id="main"></div>
+
+    <script>
+
+    try{
+      var planeShifter = new PlaneShifter.PlaneShifter(  );
+    }catch(e){
+      console.error(e);
+      document.getElementById("main").innerHTML = e
+    }
+    </script>
+
+  <body>
+</html>
