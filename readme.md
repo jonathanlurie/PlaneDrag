@@ -1,4 +1,5 @@
 [[DEMO]](http://me.jonathanlurie.fr/PlaneShifter/examples/index.html)  
+[[DEMO using external mouse reference]](http://me.jonathanlurie.fr/PlaneShifter/examples/externalMouse.html)  
 [[DEMO of error when no THREEjs]](http://me.jonathanlurie.fr/PlaneShifter/examples/bad.html)  
 [[DOC]](http://me.jonathanlurie.fr/PlaneShifter/doc/index.html)
 

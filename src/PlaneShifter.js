@@ -16,8 +16,11 @@ class PlaneShifter {
   
   /**
   * @param {THREE.Object3D} planeContainer - an object that contains 3 orthogonal planes
+  * @param {THEE.Camera} camera - camera
+  * @param {THREE.OrbitControls} controls - can also be a TrackballControls
+  * @param {THREE.Vector2} mouseReference - object that holds the mouse coordinate in [-1, 1]. Will be computed internally if not specified.
   */
-  constructor( planeContainer, camera, control = null ){
+  constructor( planeContainer, camera, controls, mouseReference = null ){
     if(! THREE){
       console.error("THREE (from THREE js) must be defined.");
       return;
@@ -31,10 +34,11 @@ class PlaneShifter {
     this._camera = camera;
     
     // orbit control or trackball control
-    this._control = control;
+    this._controls = controls;
     
-    // will be refreshed with the mousemove event
-    this._mouse = new THREE.Vector2(Infinity, Infinity);
+    // the mouse coord can be passed by an extenal pointer
+    this._useReferenceMouse = !! mouseReference;
+    this._mouse = mouseReference ? mouseReference : new THREE.Vector2(Infinity, Infinity);
     
     // 3D position (world) of the clicking
     this._pointClicked3D = null;
@@ -118,8 +122,11 @@ class PlaneShifter {
   * when mouse is moving, refreshes the internal normalized mouse position
   */
   _onMouseMove( evt ){
-    this._mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    this._mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    // do not recompute the unit mouse coord if we use an external mouse reference
+    if(!this._useReferenceMouse){
+      this._mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+      this._mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    }
     
     this._followInteraction();
   }
@@ -354,14 +361,14 @@ class PlaneShifter {
   * Disable the orbit/trackball control
   */
   _disableControl(){
-    if(!this._control)
+    if(!this._controls)
       return;
       
-    if(this._control.enabled){
+    if(this._controls.enabled){
       this._saveOrbitData();
     }
       
-    this._control.enabled = false;
+    this._controls.enabled = false;
   }
   
   
@@ -370,14 +377,14 @@ class PlaneShifter {
   * enable the orbit/trackball control
   */
   _enableControl(){
-    if(!this._control)
+    if(!this._controls)
       return;
       
     // if already enables
-    if( this._control.enabled )
+    if( this._controls.enabled )
       return;
       
-    this._control.enabled = true;
+    this._controls.enabled = true;
     this._restoreOrbitData()
       
   }
@@ -391,11 +398,11 @@ class PlaneShifter {
     this._orbitData = {
       target: new THREE.Vector3(),
       position: new THREE.Vector3(),
-      zoom: this._control.object.zoom
+      zoom: this._controls.object.zoom
     }
 
-    this._orbitData.target.copy(this._control.target);
-    this._orbitData.position.copy(this._control.object.position);
+    this._orbitData.target.copy(this._controls.target);
+    this._orbitData.position.copy(this._controls.object.position);
   }
 
 
@@ -404,16 +411,16 @@ class PlaneShifter {
   * Helper method to call before re-enabling the controls
   */
   _restoreOrbitData(){
-    this._control.position0.copy(this._orbitData.position);
+    this._controls.position0.copy(this._orbitData.position);
     
     if(this._cameraFollowObject){
-      this._control.target0.copy(this._planeContainer.position)
+      this._controls.target0.copy(this._planeContainer.position)
     }else{
-      this._control.target0.copy(this._orbitData.target);
+      this._controls.target0.copy(this._orbitData.target);
     }
     
-    this._control.zoom0 = this._orbitData.zoom;
-    this._control.reset();
+    this._controls.zoom0 = this._orbitData.zoom;
+    this._controls.reset();
   }
   
   
