@@ -6,8 +6,12 @@
 */
 
 
+// the jacky way to get THREE from a browser or npm
+var TROIS = null;
+
+
 /**
-* PlaneShifter is an helper for THREE.Object3D that contains 3 orthogonal planes.
+* PlaneShifter is an helper for TROIS.Object3D that contains 3 orthogonal planes.
 * The purpose is to make an easy translation of the whole container along each plane's normal vector, 
 * and the same for rotation.
 * The module THREE must be defined in advanced.
@@ -16,16 +20,12 @@ class PlaneShifter {
   
   /**
   * @param {THREE.Object3D} planeContainer - an object that contains 3 orthogonal planes
-  * @param {THEE.Camera} camera - camera
-  * @param {THREE.OrbitControls} controls - can also be a TrackballControls
-  * @param {THREE.Vector2} mouseReference - object that holds the mouse coordinate in [-1, 1]. Will be computed internally if not specified.
+  * @param {THREE.Camera} camera - camera
+  * @param {Object} options - {mouse: THREE.Vector2, control: THREE.OrbitControl, rotationKey: String, translationKey: String}. 
+  * Default values: rotationKey="KeyR" translationKey="KeyT"
   */
-  constructor( planeContainer, camera, controls, mouseReference = null ){
-    if(! THREE){
-      console.error("THREE (from THREE js) must be defined.");
-      return;
-    }
-      
+  constructor( planeContainer, camera, options = {}){
+    this._requireThree();
     
     // contains the three planes
     this._planeContainer = planeContainer;
@@ -34,11 +34,11 @@ class PlaneShifter {
     this._camera = camera;
     
     // orbit control or trackball control
-    this._controls = controls;
+    this._controls = this._getOption(options, "controls", null);
     
     // the mouse coord can be passed by an extenal pointer
-    this._useReferenceMouse = !! mouseReference;
-    this._mouse = mouseReference ? mouseReference : new THREE.Vector2(Infinity, Infinity);
+    this._mouse = this._getOption(options, "mouse", new TROIS.Vector2(Infinity, Infinity));
+    this._useReferenceMouse = !!(options.mouse)
     
     // 3D position (world) of the clicking
     this._pointClicked3D = null;
@@ -47,7 +47,7 @@ class PlaneShifter {
     this._pointClicked2D = null;
     
     // to cast rays
-    this._raycaster = new THREE.Raycaster();
+    this._raycaster = new TROIS.Raycaster();
     
     // if true, the camera will follow the center of the container
     this._cameraFollowObject = false;
@@ -59,7 +59,7 @@ class PlaneShifter {
     this._originalDistanceToCam = this._camera.position.clone().sub( this._planeContainer.position ).length();
     
     // for the picker AND the shift. default is from -Infinity to +Infinity
-    this._boundingBox = new THREE.Box3( new THREE.Vector3(-Infinity, -Infinity, -Infinity), new THREE.Vector3(Infinity, Infinity, Infinity));
+    this._boundingBox = new TROIS.Box3( new TROIS.Vector3(-Infinity, -Infinity, -Infinity), new TROIS.Vector3(Infinity, Infinity, Infinity));
     
     // values involved in the rotation
     this._rotateConfig = {}
@@ -73,11 +73,13 @@ class PlaneShifter {
     // current state
     this._activeState = this._states.IDLE;
     
+    var rotationKey = this._getOption(options, "rotationKey", "KeyR");
+    var translationKey = this._getOption(options, "rotationKey", "KeyT");
+    
     // keys associated with states
-    this._keysStates = {
-      'KeyT': this._states.TRANSLATION,
-      'KeyR': this._states.ROTATION,
-    }
+    this._keysStates = {};
+    this._keysStates[ rotationKey ] = this._states.ROTATION;
+    this._keysStates[ translationKey ] = this._states.TRANSLATION;
     
     this._initNormals();
     this._initEvents();
@@ -85,8 +87,39 @@ class PlaneShifter {
   
   
   /**
+  * [PRIVATE]
+  * Hacky way to make sure THREE is around, from with a browser or a npm package
+  */
+  _requireThree(){
+    try {
+      TROIS = (window && window.THREE) || require('three');
+    } catch(e) {
+      // here, window.THREE does not exist (or not yet)
+      
+      // trying to require
+      try {
+        TROIS = require("three"); 
+      } catch (e) {
+        // here, require is not possible (we are certainly in a browser)
+        console.error( e );
+      }
+    }
+  }
+  
+  
+  /**
+  * 
+  */
+  _getOption(optionsObject, key, defaultValue){
+    if(!optionsObject)
+      return defaultValue;
+      
+    return optionsObject[ key ] || defaultValue;
+  }
+  
+  /**
   * Define a boundingbox to restrict the raycasting and the shift
-  * @param {THREE.Box3} b - bounding box
+  * @param {TROIS.Box3} b - bounding box
   */
   setBoundingBox( b ){
     this._boundingBox = b.clone();
@@ -99,7 +132,7 @@ class PlaneShifter {
   */
   _initNormals(){
     this._planeContainer.children.forEach( function(plane){
-      plane.normalV = new THREE.Vector3(0, 0, 1).applyQuaternion(plane.quaternion).normalize();
+      plane.normalV = new TROIS.Vector3(0, 0, 1).applyQuaternion(plane.quaternion).normalize();
     })
   }
   
@@ -223,13 +256,13 @@ class PlaneShifter {
   /**
   * [PRIVATE]
   * Get screen coordinates of a 3D position
-  * @param {THREE.Vector3} coord3D - 3D position.
+  * @param {TROIS.Vector3} coord3D - 3D position.
   * Note: the project method is not reliable when the point is out of screen
   */
   _getScreenCoord(coord3D){
     var tempVector =  coord3D.clone();
     tempVector.project( this._camera );
-    return new THREE.Vector2(tempVector.x, tempVector.y);
+    return new TROIS.Vector2(tempVector.x, tempVector.y);
   }
   
   
@@ -268,7 +301,7 @@ class PlaneShifter {
   /**
   * [PRIVATE]
   * Deals with an intersection in the context of a translation
-  * @param {Object} intersect - result from a THREE.Raycaster.intersectObject
+  * @param {Object} intersect - result from a TROIS.Raycaster.intersectObject
   * (not the array, but rather the single object)
   */
   _castedRayForTranslation( intersect ){
@@ -284,7 +317,7 @@ class PlaneShifter {
     this._shiftConfig.topPoint2D = this._getScreenCoord( this._shiftConfig.topPoint3D );
     
     // this one is not normalized in 2D because we need the real projection from the normalized 3D vector
-    this._shiftConfig.planeNormal2D = new THREE.Vector2( 
+    this._shiftConfig.planeNormal2D = new TROIS.Vector2( 
       this._shiftConfig.topPoint2D.x - this._shiftConfig.hitPoint2D.x,
       this._shiftConfig.topPoint2D.y - this._shiftConfig.hitPoint2D.y )
     
@@ -323,7 +356,7 @@ class PlaneShifter {
   _followTranslation(){
 
     // the 2D shift performed by the mouse since the last hit  
-    var mouseShift = new THREE.Vector2(
+    var mouseShift = new TROIS.Vector2(
       this._mouse.x - this._shiftConfig.hitPoint2D.x,
       this._mouse.y - this._shiftConfig.hitPoint2D.y
     )
@@ -335,7 +368,7 @@ class PlaneShifter {
     var normalFactor = mouseShift.dot( this._shiftConfig.planeNormal2D.clone().normalize() ) / normal2DLengthOnScreen;
     var shift3D = this._shiftConfig.planeNormalWorld3D.clone().multiplyScalar( normalFactor );
     
-    var newPosition = new THREE.Vector3(
+    var newPosition = new TROIS.Vector3(
       this._shiftConfig.originalObjectPosition.x + shift3D.x,
       this._shiftConfig.originalObjectPosition.y + shift3D.y,
       this._shiftConfig.originalObjectPosition.z + shift3D.z
@@ -396,8 +429,8 @@ class PlaneShifter {
   */
   _saveOrbitData(){
     this._orbitData = {
-      target: new THREE.Vector3(),
-      position: new THREE.Vector3(),
+      target: new TROIS.Vector3(),
+      position: new TROIS.Vector3(),
       zoom: this._controls.object.zoom
     }
 
@@ -427,7 +460,7 @@ class PlaneShifter {
   /**
   * [PRIVATE]
   * Deals with an intersection in the context of a rotation
-  * @param {Object} intersect - result from a THREE.Raycaster.intersectObject
+  * @param {Object} intersect - result from a TROIS.Raycaster.intersectObject
   * (not the array, but rather the single object)
   */
   _castedRayForRotation( intersect ){
@@ -441,7 +474,7 @@ class PlaneShifter {
     this._rotateConfig.center3D = this._planeContainer.getWorldPosition();
     this._rotateConfig.center2D = this._getScreenCoord( this._rotateConfig.center3D );
     
-    this._rotateConfig.cameraObjectVector = new THREE.Vector3( 
+    this._rotateConfig.cameraObjectVector = new TROIS.Vector3( 
       this._camera.position.x - this._rotateConfig.center3D.x,
       this._camera.position.y - this._rotateConfig.center3D.y,
       this._camera.position.z - this._rotateConfig.center3D.z
@@ -463,13 +496,13 @@ class PlaneShifter {
     var start = this._rotateConfig.hitPoint2D;
     var current = this._mouse.clone();
     
-    var centerToStart = new THREE.Vector3(
+    var centerToStart = new TROIS.Vector3(
       start.x - center.x,
       start.y - center.y,
       start.z - center.z
     ).normalize();
     
-    var centerToCurrent = new THREE.Vector3(
+    var centerToCurrent = new TROIS.Vector3(
       current.x - center.x,
       current.y - center.y,
       current.z - center.z

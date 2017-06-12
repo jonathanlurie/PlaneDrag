@@ -73,7 +73,6 @@
   <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
   
   <script src="../dist/PlaneShifter.js"></script>
-  
 
 </head>
 <body>
@@ -154,8 +153,9 @@
 
     //var orbit = new THREE.OrbitControls( camera, renderer.domElement );
 
-    planeShifter = new PlaneShifter.PlaneShifter( container , camera, controls, mouse );
+    planeShifter = new PlaneShifter.PlaneShifter( container , camera, {controls: controls, mouse: mouse/*, rotationKey: "Space"*/} );
     //planeShifter.setCameraFollowObject( true );
+    
     planeShifter.setBoundingBox( new THREE.Box3( 
       new THREE.Vector3(-10, -10, -10),  // min
       new THREE.Vector3(10, 10, 10)      // max

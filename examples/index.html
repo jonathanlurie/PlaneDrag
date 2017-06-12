@@ -147,7 +147,7 @@
 
     //var orbit = new THREE.OrbitControls( camera, renderer.domElement );
 
-    planeShifter = new PlaneShifter.PlaneShifter( container , camera, controls );
+    planeShifter = new PlaneShifter.PlaneShifter( container , camera, {controls: controls} );
     //planeShifter.setCameraFollowObject( true );
     planeShifter.setBoundingBox( new THREE.Box3( 
       new THREE.Vector3(-10, -10, -10),  // min
