@@ -149,7 +149,7 @@
         <div class='px2'>
 <div class='py1'><section class='py2 clearfix'>
   <h2 id='PlaneShifter' class='mt0'>
-    PlaneShifter<span class='gray'>(planeContainer, camera, control)</span>
+    PlaneShifter<span class='gray'>(planeContainer, camera, controls, mouseReference)</span>
   </h2>
   <p>PlaneShifter is an helper for THREE.Object3D that contains 3 orthogonal planes.
 The purpose is to make an easy translation of the whole container along each plane&apos;s normal vector,
@@ -170,7 +170,13 @@ The module THREE must be defined in advanced.</p>
             
           </div>
         </li>
-        <li> <strong>control</strong>
+        <li> <strong>controls</strong>
+          :
+          <div class='force-inline'>
+            
+          </div>
+        </li>
+        <li> <strong>mouseReference</strong>
             (default <code>null</code>)
           :
           <div class='force-inline'>
@@ -723,7 +729,7 @@ Helper method to call before disabling the controls</p>
         <div class='collapsible' id='PlaneShifter.constructor'>
           <a href='#PlaneShifter.constructor'>
             <code>
-              #constructor<span class='gray'>(planeContainer, camera, control)</span>
+              #constructor<span class='gray'>(planeContainer, camera, controls, mouseReference)</span>
             </code>
             <div class='force-inline'>
               
@@ -732,7 +738,7 @@ Helper method to call before disabling the controls</p>
           <div class='collapser border px2'>
             <section class='py2 clearfix'>
               <h2 id='PlaneShifter.constructor' class='mt0'>
-                constructor<span class='gray'>(planeContainer, camera, control)</span>
+                constructor<span class='gray'>(planeContainer, camera, controls, mouseReference)</span>
               </h2>
               
                 <h4>Parameters</h4>
@@ -744,17 +750,25 @@ Helper method to call before disabling the controls</p>
             
                       </div>
                     </li>
-                    <li> <strong>camera</strong>
+                    <li><code>THEE.Camera</code> <strong>camera</strong>
                       :
                       <div class='force-inline'>
-                        
+                        <p>camera</p>
+            
                       </div>
                     </li>
-                    <li> <strong>control</strong>
-                        (default <code>null</code>)
+                    <li><code>THREE.OrbitControls</code> <strong>controls</strong>
                       :
                       <div class='force-inline'>
-                        
+                        <p>can also be a TrackballControls</p>
+            
+                      </div>
+                    </li>
+                    <li><code>THREE.Vector2</code> <strong>mouseReference</strong>
+                      :
+                      <div class='force-inline'>
+                        <p>object that holds the mouse coordinate in [-1, 1]. Will be computed internally if not specified.</p>
+            
                       </div>
                     </li>
                 </ul>
