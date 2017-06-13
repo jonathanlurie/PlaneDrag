@@ -33,6 +33,8 @@ class PlaneShifter {
   constructor( planeContainer, camera, options = {}){
     this._requireThree();
     
+    this._enabled = true;
+    
     // contains the three planes
     this._planeContainer = planeContainer;
     
@@ -89,9 +91,18 @@ class PlaneShifter {
     
     this._initNormals();
     this._initEvents();
+    
+    // all the following are array of events
+    this._customEvents = {
+      startInteraction: [],
+      stopInteraction: [],
+      rotation: [],
+      translation: []
+    };
+    
   }
   
-  
+
   /**
   * [PRIVATE]
   * Hacky way to make sure THREE is around, from with a browser or a npm package
@@ -161,6 +172,9 @@ class PlaneShifter {
   * when mouse is moving, refreshes the internal normalized mouse position
   */
   _onMouseMove( evt ){
+    if( !this._enabled )
+      return;
+    
     // do not recompute the unit mouse coord if we use an external mouse reference
     if(!this._useReferenceMouse){
       this._mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
@@ -176,6 +190,9 @@ class PlaneShifter {
   * when mouse is clicked, cast a ray if the right keyboard key is maintained pushed
   */
   _onMouseDown( evt ){
+    if( !this._enabled )
+      return;
+      
     this._keyPressed.mouse = true;
       
     if( this._activeState != this._states.IDLE )
@@ -188,6 +205,9 @@ class PlaneShifter {
   * when mouse is releasing
   */
   _onMouseUp( evt ){
+    if( !this._enabled )
+      return;
+      
     this._keyPressed.mouse = false;
     this._interacting = false;
   }
@@ -209,6 +229,9 @@ class PlaneShifter {
   * when a key from the keyboard is pressed. Refreshes the current state
   */
   _onKeyUp( evt ){
+    if( !this._enabled )
+      return;
+      
     this._keyPressed[ evt.code ] = false;
     this._evaluateCurentState();
   }
@@ -219,6 +242,9 @@ class PlaneShifter {
   * when a key from the keyboard is released. Refreshes the current state
   */
   _onKeyDown( evt ){
+    if( !this._enabled )
+      return;
+      
     this._keyPressed[ evt.code ] = true;
     this._evaluateCurentState();
   }
@@ -229,6 +255,7 @@ class PlaneShifter {
   * Evaluate the current state and enable or disable the control upon this state
   */
   _evaluateCurentState(){
+    var previousState = this._activeState;
     this._activeState = this._states.IDLE;
     
     var listOfKeys = Object.keys( this._keysStates );
@@ -242,11 +269,18 @@ class PlaneShifter {
       }
     }  
     
-    if( this._activeState == this._states.IDLE ){
-      this._enableControl();
-    }else{
-      this._disableControl();
-    }  
+    // to trigger only once
+    if( previousState != this._activeState){
+      if( this._activeState == this._states.IDLE ){
+        this._enableControl();
+        this._triggerEvents( "stopInteraction" );
+      }else{
+        this._disableControl();
+        this._triggerEvents( "startInteraction" );
+      } 
+    }
+    
+    
   }
   
   
@@ -386,6 +420,9 @@ class PlaneShifter {
         this._shiftConfig.originalObjectPosition.y + shift3D.y,
         this._shiftConfig.originalObjectPosition.z + shift3D.z
       );
+      
+      // trigger the event
+      this._triggerEvents( "translation" );
     }
     
     if( this._cameraFollowObject ){
@@ -528,8 +565,42 @@ class PlaneShifter {
     );
 
     this._planeContainer.rotateOnAxis(this._rotateConfig.planeNormalInternal3D,  angleRad * angleDirection * this._rotateConfig.cameraSign );
+    
+    // trigger the event
+    this._triggerEvents( "rotation" );
   }
   
+  
+  /**
+  * Enable or disable the PlaneShifter instance
+  * @param {Boolean} bool - true: enable, false: disable
+  */
+  enable( bool ){
+    this._enabled = bool;
+  }
+  
+  
+  /**
+  * specify an event
+  */
+  on( eventName, callback ){
+    if(typeof(callback) === 'function'){
+      if( eventName in this._customEvents ){
+        this._customEvents[ eventName ].push( callback );
+      }
+    }
+  }
+  
+  
+  _triggerEvents( eventName ){
+    if( eventName in this._customEvents ){
+      var events = this._customEvents[eventName];
+      
+      for(var i=0; i<events.length; i++){
+        events[i]();
+      }
+    }
+  }
   
 } /* END of class PlaneShifter */
 
