@@ -138,7 +138,7 @@ class PlaneShifter {
   */
   _initNormals(){
     this._planeContainer.children.forEach( function(plane){
-      plane.normalV = new TROIS.Vector3(0, 0, 1).applyQuaternion(plane.quaternion).normalize();
+      plane.userData.normalV = new TROIS.Vector3(0, 0, 1).applyQuaternion(plane.quaternion).normalize();
     });
   }
   
@@ -317,8 +317,8 @@ class PlaneShifter {
     
     this._shiftConfig.hitPoint3D = intersect.point.clone();
     this._shiftConfig.hitPoint2D = this._mouse.clone();  //this._getScreenCoord( this._shiftConfig.hitPoint3D );
-    this._shiftConfig.planeNormalInternal3D = intersectPlane.normalV.clone();
-    this._shiftConfig.planeNormalWorld3D = intersectPlane.normalV.clone().applyQuaternion(this._planeContainer.quaternion).normalize();
+    this._shiftConfig.planeNormalInternal3D = intersectPlane.userData.normalV.clone();
+    this._shiftConfig.planeNormalWorld3D = intersectPlane.userData.normalV.clone().applyQuaternion(this._planeContainer.quaternion).normalize();
     this._shiftConfig.topPoint3D = this._shiftConfig.hitPoint3D.clone().add( this._shiftConfig.planeNormalWorld3D );
     this._shiftConfig.topPoint2D = this._getScreenCoord( this._shiftConfig.topPoint3D );
     
@@ -475,8 +475,8 @@ class PlaneShifter {
     this._rotateConfig.originalObjectRotation = this._planeContainer.rotation.clone();
 
     this._rotateConfig.hitPoint2D = this._mouse.clone(); 
-    this._rotateConfig.planeNormalInternal3D = intersectPlane.normalV.clone();
-    this._rotateConfig.planeNormalWorld3D = intersectPlane.normalV.clone().applyQuaternion(this._planeContainer.quaternion).normalize();
+    this._rotateConfig.planeNormalInternal3D = intersectPlane.userData.normalV.clone();
+    this._rotateConfig.planeNormalWorld3D = intersectPlane.userData.normalV.clone().applyQuaternion(this._planeContainer.quaternion).normalize();
     this._rotateConfig.center3D = this._planeContainer.getWorldPosition();
     this._rotateConfig.center2D = this._getScreenCoord( this._rotateConfig.center3D );
     
