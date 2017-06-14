@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "description": "A starting point to create ES6 module for browser",
   "main": "src/PlaneShifter.js",
+  "repository": "jonathanlurie/PlaneShifter",
   "moduleName": "PlaneShifter",
   "moduleFormat": "umd",
   "moduleBuildDir": "dist",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup -c",
-    "build-min": "npm run build && printf \"// Build date: $(date '+%Y-%m%-dT%H:%M:%S')\n\n\" > dist/PlaneShifter.min.js && cat header.txt >> dist/PlaneShifter.min.js && google-closure-compiler-js dist/PlaneShifter.js >> dist/PlaneShifter.min.js",
+    "build-min": "npm run build && printf \"// Build date: $(date '+%Y-%m-%dT%H:%M:%S')\n\n\" > dist/PlaneShifter.min.js && cat header.txt >> dist/PlaneShifter.min.js && google-closure-compiler-js dist/PlaneShifter.js >> dist/PlaneShifter.min.js",
     "doc": "documentation src/PlaneShifter.js -o ./doc/ -f html"
   },
   "author": "Jonathan Lurie",
