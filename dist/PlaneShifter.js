@@ -125,7 +125,8 @@ class PlaneShifter {
   
   
   /**
-  * 
+  * [PRIVATE]
+  * get a value from the option argument in the constructor
   */
   _getOption(optionsObject, key, defaultValue){
     if(!optionsObject)
@@ -133,6 +134,7 @@ class PlaneShifter {
       
     return optionsObject[ key ] || defaultValue;
   }
+  
   
   /**
   * Define a boundingbox to restrict the raycasting and the shift
@@ -177,8 +179,8 @@ class PlaneShifter {
     
     // do not recompute the unit mouse coord if we use an external mouse reference
     if(!this._useReferenceMouse){
-      this._mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-      this._mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+      this._mouse.x = ( evt.clientX / window.innerWidth ) * 2 - 1;
+      this._mouse.y = - ( evt.clientY / window.innerHeight ) * 2 + 1;
     }
     
     this._followInteraction();

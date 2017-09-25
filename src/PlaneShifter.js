@@ -173,8 +173,8 @@ class PlaneShifter {
     
     // do not recompute the unit mouse coord if we use an external mouse reference
     if(!this._useReferenceMouse){
-      this._mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-      this._mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+      this._mouse.x = ( evt.clientX / window.innerWidth ) * 2 - 1;
+      this._mouse.y = - ( evt.clientY / window.innerHeight ) * 2 + 1;
     }
     
     this._followInteraction();
